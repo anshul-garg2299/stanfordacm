@@ -50,62 +50,15 @@ struct SuffixArray {
   }
 };
 
-// BEGIN CUT
-// The following code solves UVA problem 11512: GATTACA.
-#define TESTING
-#ifdef TESTING
-int main() {
-  int T;
-  cin >> T;
-  for (int caseno = 0; caseno < T; caseno++) {
-    string s;
-    cin >> s;
-    SuffixArray array(s);
-    vector<int> v = array.GetSuffixArray();
-    int bestlen = -1, bestpos = -1, bestcount = 0;
-    for (int i = 0; i < s.length(); i++) {
-      int len = 0, count = 0;
-      for (int j = i+1; j < s.length(); j++) {
-	int l = array.LongestCommonPrefix(i, j);
-	if (l >= len) {
-	  if (l > len) count = 2; else count++;
-	  len = l;
+
+//NOTE GetSuffixArray returns Rank array instead of Suffix Array to obtain Suffix Array take inverse of rank array
+int main(){
+	string s; cin >> s;
+	s+='$';
+	SuffixArray x(s);
+	vector<int> RA = x.GetSuffixArray();
+	vector<int> SA(RA.size());
+	for(int i = 0; i < SA.size(); i++){
+        	SA[RA[i]] = i;
 	}
-      }
-      if (len > bestlen || len == bestlen && s.substr(bestpos, bestlen) > s.substr(i, len)) {
-	bestlen = len;
-	bestcount = count;
-	bestpos = i;
-      }
-    }
-    if (bestlen == 0) {
-      cout << "No repetitions found!" << endl;
-    } else {
-      cout << s.substr(bestpos, bestlen) << " " << bestcount << endl;
-    }
-  }
 }
-
-#else
-// END CUT
-int main() {
-
-  // bobocel is the 0'th suffix
-  //  obocel is the 5'th suffix
-  //   bocel is the 1'st suffix
-  //    ocel is the 6'th suffix
-  //     cel is the 2'nd suffix
-  //      el is the 3'rd suffix
-  //       l is the 4'th suffix
-  SuffixArray suffix("bobocel");
-  vector<int> v = suffix.GetSuffixArray();
-  
-  // Expected output: 0 5 1 6 2 3 4
-  //                  2
-  for (int i = 0; i < v.size(); i++) cout << v[i] << " ";
-  cout << endl;
-  cout << suffix.LongestCommonPrefix(0, 2) << endl;
-}
-// BEGIN CUT
-#endif
-// END CUT
